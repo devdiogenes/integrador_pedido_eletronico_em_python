@@ -5,12 +5,20 @@ from dotenv import load_dotenv
 
 class PedidoEletronico:
 
+    def __init__(self):
+        load_dotenv()
+        token = os.getenv('Token')
+        self.headers = {
+        'xToken': token
+        }
+        self.url_base = "https://apidata.pedidoeletronico.com/api/"
+
     def listar_produtos(self):
         lista = []
         finalizado = False
         p = 1
         while finalizado == False:
-            busca = self.__executar("Produto", pagina = p)
+            busca = self.__executar_todos("Produto", pagina = p)
             listagem = busca["ListagemRetorno"]
             if listagem == []:
                 finalizado = True
@@ -22,13 +30,19 @@ class PedidoEletronico:
 
         return lista
 
-    def __executar(self, tipo_cadastro, pagina = 1, qtd_por_pagina = 100):
-        load_dotenv()
-        Token = os.getenv('Token')
-        headers = {
-        'xToken': Token
-        }
-        url = "https://apidata.pedidoeletronico.com/api/" + tipo_cadastro + "/ObterRegistros/" + str(pagina) + "/" + str(qtd_por_pagina) + "/0000-00-00T00:00:00"
-        response = requests.request("GET", url, headers=headers)
+    def obter_estoque(self, id_produto):
+        return self.__executar_individual("Estoque", id_produto)
+
+    def __executar_individual(self, tipo_cadastro, id):
+
+        url = self.url_base + tipo_cadastro + "/ObterRegistro/" + str(id)
+        response = requests.request("GET", url, headers=self.headers)
+
+        return response.json()
+
+    def __executar_todos(self, tipo_cadastro, pagina = 1, qtd_por_pagina = 100):
+        
+        url = self.url_base + tipo_cadastro + "/ObterRegistros/" + str(pagina) + "/" + str(qtd_por_pagina) + "/0000-00-00T00:00:00"
+        response = requests.request("GET", url, headers=self.headers)
 
         return response.json()
