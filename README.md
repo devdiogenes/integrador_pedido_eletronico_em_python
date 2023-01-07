@@ -15,5 +15,6 @@ Uma maneira fácil de comunicar-se com a API do PedidoEletronico, sistema de ven
 
 ## Métodos já configurados: 
 
-+ **PedidoEletronico()**.listar_produtos()
-+ **PedidoEletronico()**.obter_estoque(id_produto)
++ **PedidoEletronico()**.obter_estoque_individual(id_produto)
++ **PedidoEletronico()**.obter_produtos()
++ **PedidoEletronico()**.obter_tabelas_de_preco()
